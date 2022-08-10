@@ -31,6 +31,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var diceOne = 1;
   var diceTwo = 1;
+  var winner;
+
+  bool clicked = false;
 
   List diceImages = [1, 2, 3, 4, 5, 6];
 
@@ -48,6 +51,16 @@ class _MyHomePageState extends State<MyHomePage> {
     diceTwo = diceImages[0];
   }
 
+  whoWin() {
+    if (diceOne > diceTwo) {
+      return 'Player 1';
+    } else if (diceTwo > diceOne) {
+      return 'Player 2';
+    } else {
+      return Null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,52 +71,117 @@ class _MyHomePageState extends State<MyHomePage> {
           'Tap Dice to Roll',
         ),
       ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InkWell(
-                  onTap: () {
-                    changeDiceOne();
-                  },
-                  child: Image.asset(
-                    'images/dice$diceOne.png',
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          clicked == true
+              ? Container(
+                  decoration: BoxDecoration(
                     color: Colors.blue,
-                    height: 100,
-                    width: 100,
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                ),
-                const Text(
-                  'Player 1',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InkWell(
-                  onTap: () {
-                    changeDiceTwo();
-                  },
-                  child: Image.asset(
-                    'images/dice$diceTwo.png',
-                    color: Colors.yellow,
-                    height: 100,
-                    width: 100,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                  child: winner != Null
+                      ? Text(
+                          '$winner win',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        )
+                      : const Text(
+                          "It's a draw",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                )
+              : Container(),
+          // const SizedBox(
+          //   height: 100,
+          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Player 1',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
-                ),
-                const Text(
-                  'Player 2',
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ],
+                  const SizedBox(
+                    height: 10,
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      clicked = false;
+                      changeDiceOne();
+                    },
+                    child: Image.asset(
+                      'images/dice$diceOne.png',
+                      color: Colors.blue,
+                      height: 100,
+                      width: 100,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Player 2',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                    width: 10,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      clicked = false;
+                      changeDiceTwo();
+                    },
+                    child: Image.asset(
+                      'images/dice$diceTwo.png',
+                      color: Colors.yellow,
+                      height: 100,
+                      width: 100,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          // const SizedBox(
+          //   height: 50,
+          //   width: 50,
+          // ),
+          TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              primary: Colors.white,
+              backgroundColor: Colors.blue,
             ),
-          ],
-        ),
+            onPressed: () {
+              setState(() {});
+              clicked = true;
+              winner = whoWin();
+
+              winner != Null
+                  ? debugPrint('$winner win')
+                  : debugPrint("It's a draw");
+            },
+            child: const Text(
+              'Check the winner',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ],
       ),
     );
   }
