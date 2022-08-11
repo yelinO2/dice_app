@@ -40,15 +40,17 @@ class _MyHomePageState extends State<MyHomePage> {
   String pictures = 'images/dice1.png';
 
   void changeDiceOne() {
-    setState(() {});
-    diceImages.shuffle();
-    diceOne = diceImages[0];
+    setState(() {
+      diceImages.shuffle();
+      diceOne = diceImages[0];
+    });
   }
 
   void changeDiceTwo() {
-    setState(() {});
-    diceImages.shuffle();
-    diceTwo = diceImages[0];
+    setState(() {
+      diceImages.shuffle();
+      diceTwo = diceImages[0];
+    });
   }
 
   whoWin() {
@@ -75,33 +77,34 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           clicked == true
-              ? Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
-                    borderRadius: BorderRadius.circular(5),
+              ? Positioned(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 40,
+                    ),
+                    child: winner != Null
+                        ? Text(
+                            '$winner win',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          )
+                        : const Text(
+                            "It's a draw",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                  child: winner != Null
-                      ? Text(
-                          '$winner win',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                          ),
-                        )
-                      : const Text(
-                          "It's a draw",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                          ),
-                        ),
                 )
               : Container(),
-          // const SizedBox(
-          //   height: 100,
-          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -110,24 +113,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   const Text(
                     'Player 1',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
                   ),
                   const SizedBox(
                     height: 10,
                     width: 10,
                   ),
-                  InkWell(
-                    onTap: () {
-                      clicked = false;
+                  DiceWidget(
+                    diceNum: diceOne,
+                    color: Colors.blue,
+                    myFunction: () {
                       changeDiceOne();
+                      clicked = false;
                     },
-                    child: Image.asset(
-                      'images/dice$diceOne.png',
-                      color: Colors.blue,
-                      height: 100,
-                      width: 100,
-                    ),
-                  ),
+                  )
                 ],
               ),
               Column(
@@ -135,35 +137,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [
                   const Text(
                     'Player 2',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
                   ),
                   const SizedBox(
                     height: 10,
                     width: 10,
                   ),
-                  InkWell(
-                    onTap: () {
-                      clicked = false;
+                  DiceWidget(
+                    diceNum: diceTwo,
+                    color: Colors.yellow,
+                    myFunction: () {
                       changeDiceTwo();
+                      clicked = false;
                     },
-                    child: Image.asset(
-                      'images/dice$diceTwo.png',
-                      color: Colors.yellow,
-                      height: 100,
-                      width: 100,
-                    ),
-                  ),
+                  )
                 ],
               ),
             ],
           ),
-          // const SizedBox(
-          //   height: 50,
-          //   width: 50,
-          // ),
           TextButton(
             style: TextButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 20,
+              ),
               primary: Colors.white,
               backgroundColor: Colors.blue,
             ),
@@ -182,6 +182,33 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class DiceWidget extends StatelessWidget {
+  const DiceWidget(
+      {Key? key,
+      required this.diceNum,
+      required this.color,
+      required this.myFunction})
+      : super(key: key);
+  final int diceNum;
+  final Color color;
+  final Function myFunction;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        return myFunction();
+      },
+      child: Image.asset(
+        'images/dice$diceNum.png',
+        color: color,
+        height: 100,
+        width: 100,
       ),
     );
   }
